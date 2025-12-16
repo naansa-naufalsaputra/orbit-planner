@@ -8,6 +8,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signInAnonymously,
+    getRedirectResult,
     GoogleAuthProvider
 } from "firebase/auth";
 
@@ -53,12 +54,30 @@ export function AuthProvider({ children }) {
     }
 
     useEffect(() => {
+        // Safety timeout: If Firebase takes too long (>10s), force stop loading
+        const safetyTimer = setTimeout(() => {
+            if (loading) {
+                console.warn("Auth check timed out. Defaulting to null user.");
+                setLoading(false);
+            }
+        }, 10000);
+
+        // Handle Redirect Result (for Mobile/WebView)
+        getRedirectResult(auth).catch(err => {
+            console.error("Redirect Login Error:", err);
+            // We could set a global error state here if needed
+        });
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
             setLoading(false);
+            clearTimeout(safetyTimer);
         });
 
-        return unsubscribe;
+        return () => {
+            unsubscribe();
+            clearTimeout(safetyTimer);
+        };
     }, []);
 
     const value = {
