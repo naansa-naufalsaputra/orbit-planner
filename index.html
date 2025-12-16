@@ -32,11 +32,41 @@
       }, 3000);
     }
   </script>
+  <div id="root">
+    <h1>HTML LOADED... (Waiting for JS)</h1>
+  </div>
+
+  <!-- VISUAL CONSOLE -->
+  <div id="visual-console"
+    style="position:fixed;bottom:0;left:0;right:0;height:150px;background:black;color:lime;overflow:auto;z-index:99999;font-family:monospace;padding:10px;opacity:0.9;pointer-events:none;">
+    <div>> Initializing Visual Console...</div>
+  </div>
+
   <script>
-    window.onerror = function (msg, url, line) {
-      alert("CRITICAL ERROR: " + msg + "\nLine: " + line);
-      document.getElementById('root').innerHTML += '<p style="color:red;background:yellow;padding:10px;border:1px solid red">ERROR: ' + msg + '</p>';
-    };
+      (function () {
+        var vc = document.getElementById('visual-console');
+        function log(msg, type) {
+          var div = document.createElement('div');
+          div.textContent = (type ? '[' + type + '] ' : '> ') + msg;
+          if (type === 'ERROR') div.style.color = 'red';
+          vc.appendChild(div);
+          vc.scrollTop = vc.scrollHeight;
+        }
+
+        // Capture Errors
+        window.onerror = function (msg, url, line) {
+          log(msg + " (" + url.split('/').pop() + ":" + line + ")", "ERROR");
+        };
+
+        // Capture Console
+        var oldLog = console.log;
+        console.log = function () {
+          log(Array.from(arguments).join(' '));
+          oldLog.apply(console, arguments);
+        };
+
+        log("Page Loaded. Waiting for React...");
+      })();
   </script>
   <script type="module" src="/src/main.jsx"></script>
 </body>
