@@ -38,4 +38,5 @@ try {
     googleProvider = {};
 }
 
-export { app, auth, googleProvider, db };
+const isInitialized = !!app;
+export { app, auth, googleProvider, db, isInitialized };

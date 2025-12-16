@@ -54,7 +54,13 @@ export default function Login() {
             await loginGuest();
             navigate("/");
         } catch (e) {
-            setError("Failed to sign in as guest.");
+            // Check if it's our specific mock error
+            const msg = e.message;
+            if (msg.includes("Firebase failed to initialize")) {
+                setError("SYSTEM ERROR: Firebase API Keys are missing. Please check Vercel Settings.");
+            } else {
+                setError("Failed to sign in as guest: " + msg);
+            }
             console.error(e);
         } finally {
             setLoading(false);
