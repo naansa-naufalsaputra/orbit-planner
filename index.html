@@ -9,8 +9,17 @@
 </head>
 
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+    <div id="root" style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:sans-serif;">
+      <h1>Memuat Orbit...</h1>
+      <p style="color:red; margin-top:10px">(Debug Mode: Jika macet di sini, JS Gagal Load)</p>
+    </div>
+    <script>
+      window.onerror = function(msg, url, line) {
+        alert("CRITICAL ERROR: " + msg + "\nLine: " + line);
+        document.getElementById('root').innerHTML += '<p style="color:red;background:yellow;padding:10px;border:1px solid red">ERROR: ' + msg + '</p>';
+      };
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 
 </html>
