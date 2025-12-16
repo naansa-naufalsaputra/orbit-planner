@@ -3,6 +3,7 @@ import { auth, googleProvider, isInitialized } from "../lib/firebase";
 import {
     onAuthStateChanged,
     signInWithPopup,
+    signInWithRedirect,
     signOut,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -26,12 +27,8 @@ export function AuthProvider({ children }) {
 
     function login() {
         checkInit();
-        return signInWithPopup(auth, googleProvider).then((result) => {
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            if (credential?.accessToken) {
-                localStorage.setItem("googleAccessToken", credential.accessToken);
-            }
-        });
+        // Switch to Redirect for better mobile compatibility
+        return signInWithRedirect(auth, googleProvider);
     }
 
     function signupEmail(email, password) {
