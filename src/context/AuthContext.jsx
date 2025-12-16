@@ -64,9 +64,19 @@ export function AuthProvider({ children }) {
         logout,
     };
 
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                <h2>Menghubungkan ke Orbit...</h2>
+                <p className="text-xs text-gray-400 mt-2">Checking Authentication...</p>
+            </div>
+        );
+    }
+
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 }
