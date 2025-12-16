@@ -55,6 +55,10 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground select-none;
+  }
+
+  input, textarea {
+    @apply select-text;
   }
 }

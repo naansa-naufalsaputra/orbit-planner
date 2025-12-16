@@ -3,8 +3,13 @@ import { Play, Pause, RotateCcw, Coffee, Zap } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { cn } from '../lib/utils';
+import { db } from '../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useAuth } from '../context/AuthContext';
+import { useGamification } from "../context/GamificationContext";
 
 export default function FocusTimer() {
+    const { addXP } = useGamification();
     const [isActive, setIsActive] = useState(false);
     const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes in seconds
     const [mode, setMode] = useState('focus'); // 'focus' or 'rest'
@@ -13,6 +18,8 @@ export default function FocusTimer() {
     // Audio for notification (using a simple data URI beep or just visual for now)
     // For web, simple beep is tricky without user interaction allowed first. 
     // We'll rely on visual cues.
+
+    const { currentUser } = useAuth(); // Get current user
 
     useEffect(() => {
         if (isActive && timeLeft > 0) {
@@ -23,9 +30,22 @@ export default function FocusTimer() {
             // Timer finished
             setIsActive(false);
             if (intervalRef.current) clearInterval(intervalRef.current);
-            // Auto switch mode (conceptually)
+
+            // Auto switch mode
             if (mode === 'focus') {
-                alert("Waktu fokus selesai! Istirahat sebentar yuk. ☕");
+                // Save session to Firestore
+                if (currentUser) {
+                    addDoc(collection(db, "focusSessions"), {
+                        userId: currentUser.uid,
+                        durationMinutes: 25,
+                        completedAt: serverTimestamp(),
+                    }).catch(err => console.error("Failed to save session:", err));
+
+                    // Award XP
+                    addXP(100);
+                }
+
+                alert("Waktu fokus selesai! (+100 XP) Istirahat sebentar yuk. ☕");
                 setMode('rest');
                 setTimeLeft(5 * 60);
             } else {
@@ -38,7 +58,7 @@ export default function FocusTimer() {
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [isActive, timeLeft, mode]);
+    }, [isActive, timeLeft, mode, currentUser]);
 
     const toggleTimer = () => setIsActive(!isActive);
 

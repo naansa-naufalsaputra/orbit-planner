@@ -42,6 +42,7 @@ export function AuthProvider({ children }) {
     }
 
     function logout() {
+        localStorage.removeItem("googleAccessToken");
         return signOut(auth);
     }
 

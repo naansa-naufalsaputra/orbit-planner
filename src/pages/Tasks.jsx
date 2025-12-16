@@ -11,6 +11,10 @@ import { createCalendarEvent } from "../lib/googleCalendar";
 import { format } from "date-fns";
 import { Calendar } from "../components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
+import { motion, AnimatePresence } from "framer-motion";
+
+import { useGamification } from "../context/GamificationContext";
+// import { toast } from "sonner";
 
 export default function Tasks() {
     const { currentUser } = useAuth();
@@ -72,11 +76,20 @@ export default function Tasks() {
         }
     }
 
+    const { addXP } = useGamification();
+
     async function toggleComplete(task) {
         try {
+            const isNowComplete = !task.completed;
             await updateDoc(doc(db, "tasks", task.id), {
-                completed: !task.completed
+                completed: isNowComplete
             });
+
+            if (isNowComplete) {
+                // Award XP
+                addXP(50);
+                // toast(`Tugas Selesai! +50 XP 🌟`);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -190,46 +203,54 @@ export default function Tasks() {
             </Card>
 
             <div className="space-y-3">
-                {tasks.map(task => {
-                    const isOverdue = !task.completed && task.dueDate && new Date(task.dueDate) < new Date().setHours(0, 0, 0, 0);
-                    return (
-                        <div
-                            key={task.id}
-                            className={cn(
-                                "flex items-center gap-4 p-4 rounded-xl border bg-card transition-all group",
-                                task.completed ? "opacity-60 bg-muted/50" : "hover:shadow-md",
-                                isOverdue ? "border-destructive/50" : ""
-                            )}
-                        >
-                            <button
-                                onClick={() => toggleComplete(task)}
-                                className={cn("text-muted-foreground transition-colors", task.completed ? "text-primary" : "hover:text-primary")}
-                            >
-                                {task.completed ? <CheckCircle size={24} /> : <Circle size={24} />}
-                            </button>
-
-                            <div className="flex-1 min-w-0">
-                                <p className={cn("font-medium truncate", task.completed && "line-through text-muted-foreground")}>
-                                    {task.title}
-                                </p>
-                                {task.dueDate && (
-                                    <div className={cn("flex items-center gap-1 text-xs mt-1", isOverdue ? "text-destructive font-bold" : "text-muted-foreground")}>
-                                        <CalendarIcon size={12} />
-                                        <span>{new Date(task.dueDate).toLocaleDateString()}</span>
-                                        {isOverdue && <span>(Overdue)</span>}
-                                    </div>
+                <AnimatePresence mode="popLayout">
+                    {tasks.map(task => {
+                        const isOverdue = !task.completed && task.dueDate && new Date(task.dueDate) < new Date().setHours(0, 0, 0, 0);
+                        return (
+                            <motion.div
+                                key={task.id}
+                                layout
+                                initial={{ opacity: 0, x: -20, scale: 0.9 }}
+                                animate={{ opacity: 1, x: 0, scale: 1 }}
+                                exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                className={cn(
+                                    "flex items-center gap-4 p-4 rounded-xl border bg-card transition-all group",
+                                    task.completed ? "opacity-60 bg-muted/50" : "hover:shadow-md",
+                                    isOverdue ? "border-destructive/50" : ""
                                 )}
-                            </div>
-
-                            <button
-                                onClick={() => handleDelete(task.id)}
-                                className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity p-2"
                             >
-                                <Trash2 size={18} />
-                            </button>
-                        </div>
-                    );
-                })}
+                                <motion.button
+                                    whileTap={{ scale: 0.8 }}
+                                    onClick={() => toggleComplete(task)}
+                                    className={cn("text-muted-foreground transition-colors", task.completed ? "text-primary" : "hover:text-primary")}
+                                >
+                                    {task.completed ? <CheckCircle size={24} /> : <Circle size={24} />}
+                                </motion.button>
+
+                                <div className="flex-1 min-w-0">
+                                    <p className={cn("font-medium truncate", task.completed && "line-through text-muted-foreground")}>
+                                        {task.title}
+                                    </p>
+                                    {task.dueDate && (
+                                        <div className={cn("flex items-center gap-1 text-xs mt-1", isOverdue ? "text-destructive font-bold" : "text-muted-foreground")}>
+                                            <CalendarIcon size={12} />
+                                            <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                                            {isOverdue && <span>(Overdue)</span>}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <button
+                                    onClick={() => handleDelete(task.id)}
+                                    className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity p-2"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
                 {tasks.length === 0 && (
                     <div className="text-center py-12 text-muted-foreground">
                         <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-20" />

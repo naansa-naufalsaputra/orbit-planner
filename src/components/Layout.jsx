@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, StickyNote, Calendar, CheckSquare, LogOut, Orbit, Sun, Moon } from "lucide-react";
+import { LayoutDashboard, StickyNote, Calendar, CheckSquare, LogOut, Orbit, Sun, Moon, GraduationCap, User } from "lucide-react";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -29,7 +29,9 @@ export default function Layout() {
         { href: "/notes", label: "Notes", icon: StickyNote },
         { href: "/schedule", label: "Schedule", icon: Calendar },
         { href: "/tasks", label: "Tasks", icon: CheckSquare },
+        { href: "/grades", label: "Nilai", icon: GraduationCap },
         { href: "/calendar", label: "Calendar", icon: Calendar },
+        { href: "/profile", label: "Profil", icon: User },
     ];
 
     return (

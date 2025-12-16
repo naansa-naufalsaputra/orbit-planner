@@ -81,7 +81,7 @@ export async function generateMotivation(timeOfDay, userName = "Student") {
     }
 }
 
-export async function enhanceNoteContent(content, type) {
+export async function enhanceNoteContent(content, type, userContext = {}) {
     if (!model) {
         throw new Error("Gemini API Key is missing.");
     }
@@ -99,11 +99,14 @@ export async function enhanceNoteContent(content, type) {
     } else if (type === "summarize") {
         prompt = `
         Summarize the following text into concise bullet points in INDONESIAN.
+        Connect the topic to the user's major (${userContext.major || "General"}) if relevant.
         Capture the key ideas and main takeaways.
+        User Focus: ${userContext.currentFocus || "General Study"}
+        Tone: ${userContext.learningStyle || "Neutral"}
         Return ONLY the bullet points.
 
-        Text: "${content}"
-        `;
+            Text: "${content}"
+                `;
     } else {
         return content;
     }
@@ -115,5 +118,52 @@ export async function enhanceNoteContent(content, type) {
     } catch (error) {
         console.error("Gemini Enhancement Error:", error);
         throw new Error("Gagal memproses AI. Silakan coba lagi.");
+    }
+}
+
+export async function generateQuizFromNote(noteContent, userContext = {}) {
+    if (!model) {
+        throw new Error("Gemini API Key is missing.");
+    }
+
+    const prompt = `
+    Based on the following study notes, create a quiz with 5 multiple - choice questions.
+            Language: INDONESIAN.
+    
+    Return ONLY a JSON array of objects.Do not use markdown backticks.
+    
+    User Context:
+        - Major: ${userContext.major || "General"}
+        - Focus: ${userContext.currentFocus || "General"}
+        - Difficulty: ${userContext.learningStyle === 'Academic' ? 'Hard' : 'Medium'}
+
+        Format:
+        [
+            {
+                "question": "Question text here?",
+                "options": ["Option A", "Option B", "Option C", "Option D"],
+                "correctAnswer": 0 // Index of the correct option (0-3)
+            }
+        ]
+
+        Notes:
+        "${noteContent}"
+            `;
+
+    try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        console.log("Gemini Quiz Raw:", text);
+
+        let cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const jsonMatch = cleanText.match(/\[[\s\S]*\]/);
+        if (jsonMatch) cleanText = jsonMatch[0];
+
+        return JSON.parse(cleanText);
+    } catch (error) {
+        console.error("Gemini Quiz Error:", error);
+        throw new Error("Gagal membuat kuis. Coba lagi.");
     }
 }

@@ -8,7 +8,10 @@ import { Link } from "react-router-dom";
 import { cn } from "../lib/utils";
 import { db } from "../lib/firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
+import MagicTaskModal from "../components/MagicTaskModal";
 import FocusTimer from "../components/FocusTimer";
+import StudyCharts from "../components/StudyCharts";
+import StudyBuddy from "../components/StudyBuddy";
 
 export default function Dashboard() {
     const { currentUser } = useAuth();
@@ -103,8 +106,8 @@ export default function Dashboard() {
 
     return (
         <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Greeting Section */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-4">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                         <Icon className="h-6 w-6 text-orange-500 dark:text-yellow-400" />
@@ -130,7 +133,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Universal Add Button */}
-                <div className="relative">
+                <div className="relative z-50">
                     <Button
                         onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
                         className={cn("rounded-full w-12 h-12 p-0 shadow-lg transition-transform hover:rotate-90", isAddMenuOpen && "rotate-45")}
@@ -156,10 +159,15 @@ export default function Dashboard() {
                 </div>
             </div>
 
+            {/* Study Analytics Charts - NEW */}
+            <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+                <StudyCharts />
+            </div>
+
             {/* Main Content Grid */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* 1. Focus Timer Widget */}
-                <div className="lg:col-span-1">
+                <div className="lg:col-span-1 h-full min-h-[400px]">
                     <FocusTimer />
                 </div>
 
@@ -291,8 +299,11 @@ export default function Dashboard() {
             </div>
 
             {/* Decoration Blobs */}
-            <div className="fixed top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse duration-[5000ms]" />
-            <div className="fixed bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse duration-[7000ms]" />
+            <div className="fixed top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '5000ms' }} />
+            <div className="fixed bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '7000ms' }} />
+
+            {/* Interactive Mascot */}
+            <StudyBuddy />
         </div>
     );
 }

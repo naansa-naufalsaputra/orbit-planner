@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../lib/firebase";
-import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, onSnapshot, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Plus, Trash2, MapPin, Clock } from "lucide-react";
@@ -11,14 +11,14 @@ export default function Schedule() {
     const [classes, setClasses] = useState([]);
     const [isAdding, setIsAdding] = useState(false);
     const [newClass, setNewClass] = useState({
-        day: "Monday",
+        day: "Senin",
         subject: "",
         time: "",
         venue: ""
     });
     const [loading, setLoading] = useState(false);
 
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
 
     useEffect(() => {
         if (!currentUser) return;
@@ -43,17 +43,17 @@ export default function Schedule() {
                 ...newClass
             });
             setIsAdding(false);
-            setNewClass({ day: "Monday", subject: "", time: "", venue: "" });
+            setNewClass({ day: "Senin", subject: "", time: "", venue: "" });
         } catch (e) {
             console.error(e);
-            alert("Error adding class");
+            alert("Gagal menambahkan jadwal");
         } finally {
             setLoading(false);
         }
     }
 
     async function handleDelete(id) {
-        if (!confirm("Remove this class?")) return;
+        if (!confirm("Hapus jadwal ini?")) return;
         try {
             await deleteDoc(doc(db, "schedule", id));
         } catch (e) {
@@ -65,18 +65,18 @@ export default function Schedule() {
         <div className="p-4 md:p-8 max-w-7xl mx-auto pb-24 md:pb-8">
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Schedule</h1>
-                    <p className="text-muted-foreground">Manage your weekly classes.</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Jadwal Kuliah</h1>
+                    <p className="text-muted-foreground">Kelola jadwal mingguanmu.</p>
                 </div>
                 <Button onClick={() => setIsAdding(true)}>
-                    <Plus className="mr-2 h-4 w-4" /> Add Class
+                    <Plus className="mr-2 h-4 w-4" /> Tambah Jadwal
                 </Button>
             </div>
 
             {isAdding && (
                 <Card className="mb-8 border-primary/20 bg-primary/5">
                     <CardHeader>
-                        <CardTitle>Add New Class</CardTitle>
+                        <CardTitle>Tambah Jadwal Baru</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleAddClass} className="space-y-4">
@@ -89,29 +89,29 @@ export default function Schedule() {
                                     {days.map(d => <option key={d} value={d}>{d}</option>)}
                                 </select>
                                 <input
-                                    placeholder="Subject (e.g. Math)"
+                                    placeholder="Mata Kuliah (Cth: Kalkulus)"
                                     className="p-3 rounded-md border bg-background"
                                     value={newClass.subject}
                                     onChange={e => setNewClass({ ...newClass, subject: e.target.value })}
                                     required
                                 />
                                 <input
-                                    placeholder="Time (e.g. 09:00 - 10:30)"
+                                    placeholder="Waktu (Cth: 08:00 - 10:00)"
                                     className="p-3 rounded-md border bg-background"
                                     value={newClass.time}
                                     onChange={e => setNewClass({ ...newClass, time: e.target.value })}
                                     required
                                 />
                                 <input
-                                    placeholder="Venue (e.g. Room 101)"
+                                    placeholder="Ruangan (Cth: A101)"
                                     className="p-3 rounded-md border bg-background"
                                     value={newClass.venue}
                                     onChange={e => setNewClass({ ...newClass, venue: e.target.value })}
                                 />
                             </div>
                             <div className="flex justify-end gap-2">
-                                <Button type="button" variant="ghost" onClick={() => setIsAdding(false)}>Cancel</Button>
-                                <Button type="submit" disabled={loading}>Save Class</Button>
+                                <Button type="button" variant="ghost" onClick={() => setIsAdding(false)}>Batal</Button>
+                                <Button type="submit" disabled={loading}>Simpan</Button>
                             </div>
                         </form>
                     </CardContent>
@@ -122,7 +122,7 @@ export default function Schedule() {
                 {days.map(day => {
                     const dayClasses = classes
                         .filter(c => c.day === day)
-                        .sort((a, b) => a.time.localeCompare(b.time)); // Simple string sort for time
+                        .sort((a, b) => a.time.localeCompare(b.time));
 
                     if (dayClasses.length === 0) return null;
 
@@ -163,7 +163,7 @@ export default function Schedule() {
                 })}
                 {classes.length === 0 && !isAdding && (
                     <div className="text-center py-20 text-muted-foreground">
-                        <p>No classes added yet. Click "Add Class" to start!</p>
+                        <p>Belum ada jadwal. Klik "Tambah Jadwal" untuk memulai!</p>
                     </div>
                 )}
             </div>
