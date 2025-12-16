@@ -16,11 +16,20 @@
   </div>
   <div id="root"></div>
   <script>
+    // KILL SWITCH: Force unregister all Service Workers to clear stale cache
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+          console.log('Unregistering Service Worker:', registration);
+          registration.unregister();
+        }
+      });
+    }
+
     // Hide debug layer if React loads successfully
     window.onload = function () {
       setTimeout(() => {
         // We don't auto-hide yet, let's see it first
-        // document.getElementById('debug-layer').style.display = 'none';
       }, 3000);
     }
   </script>
