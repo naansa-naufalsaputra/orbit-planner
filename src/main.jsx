@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/react'
-import { ErrorBoundary } from "react-error-boundary";
-import './index.css'
-import App from './App.jsx'
+// import { Analytics } from '@vercel/analytics/react'
+// import { SpeedInsights } from '@vercel/speed-insights/react'
+// import { ErrorBoundary } from "react-error-boundary";
+// import './index.css'
+// import App from './App.jsx'
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
