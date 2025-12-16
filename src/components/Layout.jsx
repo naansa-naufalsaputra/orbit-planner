@@ -111,7 +111,7 @@ export default function Layout() {
                             key={item.href}
                             to={item.href}
                             className={clsx(
-                                "flex flex-col items-center gap-1 p-2 rounded-lg transition-all w-16",
+                                "flex flex-col items-center gap-1 p-2 rounded-lg transition-all w-16 shrink-0",
                                 isActive
                                     ? "text-primary bg-primary/10"
                                     : "text-muted-foreground hover:text-foreground"
