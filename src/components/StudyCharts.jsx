@@ -101,7 +101,7 @@ export default function StudyCharts() {
                 </CardHeader>
                 <CardContent className="pl-0">
                     <div className="h-[300px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minHeight={100}>
                             <BarChart data={focusData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#88888820" />
                                 <XAxis
@@ -151,7 +151,7 @@ export default function StudyCharts() {
                                 <p>Belum ada data tugas.</p>
                             </div>
                         ) : (
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minHeight={100}>
                                 <PieChart>
                                     <Pie
                                         data={taskData}

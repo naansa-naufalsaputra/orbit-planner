@@ -30,7 +30,7 @@ export default function StudyBuddy() {
 
     // Fetch the animation data on mount
     useEffect(() => {
-        fetch("https://lottie.host/80c65538-4e3e-4614-9b34-11e25e982121/C9c2A4Hj7r.json")
+        fetch(ROBOT_ANIMATION_URL)
             .then(res => res.json())
             .then(data => setAnimationData(data))
             .catch(err => console.error("Failed to load mascot:", err));

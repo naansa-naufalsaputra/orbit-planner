@@ -19,20 +19,7 @@
     </div>
   </div>
 
-  <script>
-    // KILL SWITCH: AGGRESSIVE MODE
-    // Run immediately to nuke any existing Service Workers preventing updates
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        for (let registration of registrations) {
-          console.warn('☠️ KILL SWITCH: Unregistering Service Worker:', registration);
-          registration.unregister().then(function (success) {
-            console.log('Service Worker unregistered: ' + success);
-          });
-        }
-      });
-    }
-  </script>
+
 
   <script type="module" src="/src/main.jsx"></script>
 </body>
