@@ -9,17 +9,28 @@
 </head>
 
 <body>
-    <div id="root" style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:sans-serif;">
-      <h1>Memuat Orbit...</h1>
-      <p style="color:red; margin-top:10px">(Debug Mode: Jika macet di sini, JS Gagal Load)</p>
-    </div>
-    <script>
-      window.onerror = function(msg, url, line) {
-        alert("CRITICAL ERROR: " + msg + "\nLine: " + line);
-        document.getElementById('root').innerHTML += '<p style="color:red;background:yellow;padding:10px;border:1px solid red">ERROR: ' + msg + '</p>';
-      };
-    </script>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+  <div id="debug-layer"
+    style="position:fixed;top:0;left:0;z-index:9999;background:white;padding:20px;border:5px solid red;">
+    <h1>Debug Mode Aktif</h1>
+    <p>Jika Anda melihat ini, berarti HTML berhasil dimuat.</p>
+  </div>
+  <div id="root"></div>
+  <script>
+    // Hide debug layer if React loads successfully
+    window.onload = function () {
+      setTimeout(() => {
+        // We don't auto-hide yet, let's see it first
+        // document.getElementById('debug-layer').style.display = 'none';
+      }, 3000);
+    }
+  </script>
+  <script>
+    window.onerror = function (msg, url, line) {
+      alert("CRITICAL ERROR: " + msg + "\nLine: " + line);
+      document.getElementById('root').innerHTML += '<p style="color:red;background:yellow;padding:10px;border:1px solid red">ERROR: ' + msg + '</p>';
+    };
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 
 </html>
