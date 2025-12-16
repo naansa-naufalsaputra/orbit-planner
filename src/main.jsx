@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-// import { Analytics } from '@vercel/analytics/react'
-// import { SpeedInsights } from '@vercel/speed-insights/react'
-// import { ErrorBoundary } from "react-error-boundary";
-// import './index.css'
-// import App from './App.jsx'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
+import { ErrorBoundary } from "react-error-boundary";
+import './index.css'
+import App from './App.jsx'
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -22,16 +22,10 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <div style={{ padding: 20, border: '5px solid blue' }}>
-      <h1>SYSTEM CHECK: REACT IS ALIVE (V3)</h1>
-      <p>If you see this, main.jsx is working.</p>
-    </div>
-    {/* 
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <App />
       <Analytics />
       <SpeedInsights />
     </ErrorBoundary>
-    */}
   </StrictMode>,
 )
