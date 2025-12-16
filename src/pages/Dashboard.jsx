@@ -107,7 +107,7 @@ export default function Dashboard() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <Icon className="h-6 w-6 text-orange-500 dark:text-yellow-400 animate-pulse" />
+                        <Icon className="h-6 w-6 text-orange-500 dark:text-yellow-400" />
                         <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                             {greeting.title}, {currentUser?.displayName?.split(" ")[0] || "Mahasiswa"}!
                         </h1>
@@ -164,8 +164,10 @@ export default function Dashboard() {
                 </div>
 
                 {/* 2. Today's Schedule Widget */}
-                <Card className="lg:col-span-2 h-full border-purple-200 dark:border-purple-900 overflow-hidden flex flex-col">
-                    <CardHeader className="bg-purple-50/50 dark:bg-purple-900/10 pb-4">
+                <Card className="lg:col-span-2 h-full border-purple-200 dark:border-purple-900 overflow-hidden flex flex-col relative group backdrop-blur-sm bg-card/90">
+                    <div className="absolute top-0 right-0 p-20 bg-purple-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-opacity duration-1000 group-hover:opacity-100 opacity-50" />
+
+                    <CardHeader className="bg-purple-50/50 dark:bg-purple-900/10 pb-4 z-10">
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="text-xl">Jadwal Hari Ini</CardTitle>
@@ -178,40 +180,47 @@ export default function Dashboard() {
                             </Button>
                         </div>
                     </CardHeader>
-                    <CardContent className="p-0 flex-1 overflow-y-auto max-h-[300px]">
+                    <CardContent className="p-0 flex-1 overflow-y-auto max-h-[300px] z-10 relative">
                         {loadingSchedule ? (
                             <div className="p-8 text-center text-muted-foreground animate-pulse">Memuat jadwal...</div>
                         ) : todayClasses.length > 0 ? (
-                            <div className="divide-y">
-                                {todayClasses.map((cls, index) => (
-                                    <div key={cls.id} className="p-4 flex items-center gap-4 hover:bg-muted/50 transition-colors">
-                                        <div className="flex flex-col items-center bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 rounded-lg p-2 min-w-[80px]">
-                                            <span className="font-bold text-sm">{cls.startTime}</span>
-                                            <span className="text-xs opacity-70">-</span>
-                                            <span className="font-bold text-sm">{cls.endTime}</span>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="font-bold text-lg leading-none mb-1">{cls.subject}</h3>
-                                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                                <span className="flex items-center gap-1"><MapPin size={12} /> {cls.room}</span>
+                            <div className="divide-y relative">
+                                {todayClasses.map((cls, index) => {
+                                    // Parse time string e.g. "09:00 - 10:30" or "09.00-10.30"
+                                    const timeParts = cls.time ? cls.time.split(/[-–]/).map(t => t.trim()) : ["??", "??"];
+                                    const startTime = timeParts[0] || "";
+                                    const endTime = timeParts[1] || "";
+
+                                    return (
+                                        <div key={cls.id} className="p-4 flex items-center gap-4 hover:bg-muted/50 transition-colors">
+                                            <div className="flex flex-col items-center bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 rounded-lg p-2 min-w-[80px]">
+                                                <span className="font-bold text-sm">{startTime}</span>
+                                                <span className="text-xs opacity-70">-</span>
+                                                <span className="font-bold text-sm">{endTime}</span>
                                             </div>
+                                            <div className="flex-1">
+                                                <h3 className="font-bold text-lg leading-none mb-1">{cls.subject}</h3>
+                                                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                                    <span className="flex items-center gap-1"><MapPin size={12} /> {cls.venue || "Online"}</span>
+                                                </div>
+                                            </div>
+                                            {index === 0 && (
+                                                <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full animate-pulse">
+                                                    Next
+                                                </span>
+                                            )}
                                         </div>
-                                        {index === 0 && (
-                                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full animate-pulse">
-                                                Next
-                                            </span>
-                                        )}
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center h-full p-8 text-center text-muted-foreground">
-                                <div className="bg-green-100 dark:bg-green-900/20 p-4 rounded-full mb-4">
+                                <div className="bg-green-100 dark:bg-green-900/20 p-4 rounded-full mb-4 animate-bounce duration-3000">
                                     <Sparkles className="h-8 w-8 text-green-600 dark:text-green-400" />
                                 </div>
                                 <h3 className="text-lg font-medium text-foreground">Hari ini Kosong!</h3>
                                 <p>Tidak ada jadwal kuliah hari ini. Waktunya istirahat atau belajar mandiri.</p>
-                                <Button variant="link" asChild className="mt-2">
+                                <Button variant="link" asChild className="mt-2 text-blue-500">
                                     <Link to="/schedule">Tambah Jadwal?</Link>
                                 </Button>
                             </div>
@@ -223,10 +232,12 @@ export default function Dashboard() {
             {/* Stats / Quick Links Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Link to="/tasks">
-                    <Card className="hover:scale-[1.02] transition-transform duration-300 cursor-pointer h-full">
+                    <Card className="hover:scale-[1.05] transition-all duration-300 cursor-pointer h-full border-l-4 border-l-blue-500 hover:shadow-lg hover:shadow-blue-500/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Tugas</CardTitle>
-                            <Clock className="h-4 w-4 text-blue-500" />
+                            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                                <Clock className="h-4 w-4 text-blue-500" />
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">Track</div>
@@ -235,10 +246,12 @@ export default function Dashboard() {
                     </Card>
                 </Link>
                 <Link to="/notes">
-                    <Card className="hover:scale-[1.02] transition-transform duration-300 cursor-pointer h-full delay-75">
+                    <Card className="hover:scale-[1.05] transition-all duration-300 cursor-pointer h-full border-l-4 border-l-orange-500 hover:shadow-lg hover:shadow-orange-500/10 delay-75">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Catatan</CardTitle>
-                            <BookOpen className="h-4 w-4 text-orange-500" />
+                            <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
+                                <BookOpen className="h-4 w-4 text-orange-500" />
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">Ideas</div>
@@ -247,10 +260,12 @@ export default function Dashboard() {
                     </Card>
                 </Link>
                 <Link to="/schedule">
-                    <Card className="hover:scale-[1.02] transition-transform duration-300 cursor-pointer h-full delay-150">
+                    <Card className="hover:scale-[1.05] transition-all duration-300 cursor-pointer h-full border-l-4 border-l-purple-500 hover:shadow-lg hover:shadow-purple-500/10 delay-150">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Jadwal</CardTitle>
-                            <CalendarIcon className="h-4 w-4 text-purple-500" />
+                            <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                                <CalendarIcon className="h-4 w-4 text-purple-500" />
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">Plan</div>
@@ -258,17 +273,26 @@ export default function Dashboard() {
                         </CardContent>
                     </Card>
                 </Link>
-                <Card className="hover:scale-[1.02] transition-transform duration-300 h-full delay-200 bg-gradient-to-br from-indigo-500 to-purple-600 text-white border-none">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card className="hover:scale-[1.05] transition-all duration-300 h-full delay-200 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white border-none relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-8 bg-white/10 rounded-full blur-2xl -mr-4 -mt-4 transition-transform duration-700 group-hover:scale-150" />
+                    <div className="absolute bottom-0 left-0 p-6 bg-black/10 rounded-full blur-xl -ml-2 -mb-2" />
+
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
                         <CardTitle className="text-sm font-medium text-white/90">Status</CardTitle>
-                        <CheckCircle className="h-4 w-4 text-white/80" />
+                        <div className="p-1 bg-white/20 rounded-full backdrop-blur-sm">
+                            <CheckCircle className="h-4 w-4 text-white" />
+                        </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="relative z-10">
                         <div className="text-2xl font-bold">Active</div>
-                        <p className="text-xs text-white/70">Siap produktif!</p>
+                        <p className="text-xs text-white/80">Siap produktif!</p>
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Decoration Blobs */}
+            <div className="fixed top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse duration-[5000ms]" />
+            <div className="fixed bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse duration-[7000ms]" />
         </div>
     );
 }

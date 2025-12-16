@@ -1,16 +1,60 @@
-# React + Vite
+# 🌌 Orbit Student Planner (AI-Powered)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Orbit Dashboard](https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2628&auto=format&fit=crop)
 
-Currently, two official plugins are available:
+**Orbit** adalah aplikasi Student Planner modern yang ditenagai oleh AI (Google Gemini) untuk membantu mahasiswa mengatur jadwal kuliah, tugas, dan waktu belajar dengan lebih cerdas dan efisien.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Fitur Utama
 
-## React Compiler
+### 🧠 AI yang "Mengerti" Kamu
+Orbit tidak hanya menyimpan tugas, tapi membantu kamu menyelesaikannya:
+-   **Magic Task Generator**: Malas mengetik langkah tugas? Cukup ketik _"Buat tugas presentasi biologi"_, AI akan memecahnya menjadi checklist lengkap dengan tenggat waktu otomatis.
+-   **Personalized Motivation**: Sapaan ramah dan kutipan motivasi unik setiap kali kamu membuka aplikasi, khusus untukmu.
+-   **Smart Notes**: Fitur "Perbaiki Tata Bahasa" dan "Ringkas Catatan" bertenaga AI untuk membantumu belajar.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📅 Manajemen Waktu Cerdas
+-   **Smart Dashboard**: Langsung tampilkan **Jadwal Hari Ini** begitu aplikasi dibuka. Tidak perlu mencari-cari manual.
+-   **Focus Mode (Pomodoro)**: Timer 25 menit terintegrasi untuk sesi belajar fokus tanpa gangguan.
+-   **Interactive Schedule**: Atur jadwal kuliah mingguan dengan antarmuka yang bersih dan mudah.
 
-## Expanding the ESLint configuration
+### 🎨 Desain Premium & Lokal
+-   **Indonesian Language Support**: Sepenuhnya dalam Bahasa Indonesia yang natural.
+-   **Modern UI**: Tampilan Dark Mode yang elegan, animasi halus, dan visual yang memanjakan mata.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Teknologi
+
+Dibuat dengan teknologi web modern:
+-   **React + Vite**: Performa super cepat.
+-   **Tailwind CSS**: Styling modern dan responsif.
+-   **Firebase**: Database Realtime & Authentication.
+-   **Google Gemini API**: Otak di balik fitur kecerdasan buatan.
+
+## 🚀 Cara Menjalankan
+
+1.  **Clone Repository**
+    ```bash
+    git clone https://github.com/naansa-naufalsaputra/orbit-planner.git
+    cd orbit-planner
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Setup Environment Variables**
+    Buat file `.env` dan isi dengan konfigurasi Firebase & Gemini API key kamu:
+    ```env
+    VITE_GEMINI_API_KEY=your_gemini_key
+    VITE_FIREBASE_API_KEY=your_firebase_key
+    ...
+    ```
+
+4.  **Jalankan Aplikasi**
+    ```bash
+    npm run dev
+    ```
+
+## 📝 Lisensi
+
+Project ini dibuat oleh **Naufal Saputra**. Silakan gunakan untuk tujuan edukasi.
