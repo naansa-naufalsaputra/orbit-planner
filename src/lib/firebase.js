@@ -32,7 +32,7 @@ try {
         currentUser: null,
         signInWithPopup: throwError,
         signOut: throwError,
-        onAuthStateChanged: () => () => { }
+        onAuthStateChanged: (cb) => { cb(null); return () => { }; }
     };
     db = { collection: throwError };
     googleProvider = {};
