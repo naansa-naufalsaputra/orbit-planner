@@ -70,7 +70,7 @@ export default function StudyBuddy() {
                 dragMomentum={false}
                 whileHover={{ cursor: "grab" }}
                 whileDrag={{ cursor: "grabbing" }}
-                className="absolute bottom-6 right-6 flex flex-col items-end gap-2 pointer-events-auto"
+                className="absolute bottom-24 md:bottom-6 right-6 flex flex-col items-end gap-2 pointer-events-auto"
             >
                 {/* Speech Bubble */}
                 <AnimatePresence>

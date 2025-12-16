@@ -299,8 +299,8 @@ export default function Dashboard() {
             </div>
 
             {/* Decoration Blobs */}
-            <div className="fixed top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '5000ms' }} />
-            <div className="fixed bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '7000ms' }} />
+            <div className="fixed top-20 left-10 w-40 h-40 md:w-72 md:h-72 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '5000ms' }} />
+            <div className="fixed bottom-10 right-10 w-48 h-48 md:w-96 md:h-96 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '7000ms' }} />
 
             {/* Interactive Mascot */}
             <StudyBuddy />

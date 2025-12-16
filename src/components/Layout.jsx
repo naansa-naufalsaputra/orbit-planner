@@ -102,7 +102,7 @@ export default function Layout() {
             </main>
 
             {/* Mobile Bottom Navigation */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border flex justify-around p-2 z-50 pb-safe">
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border flex justify-start overflow-x-auto p-2 z-50 pb-safe gap-2 no-scrollbar">
                 {navItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.href || (item.href !== "/" && location.pathname.startsWith(item.href));
