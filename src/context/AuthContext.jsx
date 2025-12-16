@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth, googleProvider } from "../lib/firebase";
+import { auth, googleProvider, isInitialized } from "../lib/firebase";
 import {
     onAuthStateChanged,
     signInWithPopup,
@@ -20,7 +20,12 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    function checkInit() {
+        if (!isInitialized) throw new Error("Firebase failed to initialize. Missing API Keys.");
+    }
+
     function login() {
+        checkInit();
         return signInWithPopup(auth, googleProvider).then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
             if (credential?.accessToken) {
@@ -30,18 +35,22 @@ export function AuthProvider({ children }) {
     }
 
     function signupEmail(email, password) {
+        checkInit();
         return createUserWithEmailAndPassword(auth, email, password);
     }
 
     function loginEmail(email, password) {
+        checkInit();
         return signInWithEmailAndPassword(auth, email, password);
     }
 
     function loginGuest() {
+        checkInit();
         return signInAnonymously(auth);
     }
 
     function logout() {
+        checkInit();
         localStorage.removeItem("googleAccessToken");
         return signOut(auth);
     }
