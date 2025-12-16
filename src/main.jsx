@@ -22,10 +22,16 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <div style={{ padding: 20, border: '5px solid blue' }}>
+      <h1>SYSTEM CHECK: REACT IS ALIVE (V3)</h1>
+      <p>If you see this, main.jsx is working.</p>
+    </div>
+    {/* 
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <App />
       <Analytics />
       <SpeedInsights />
     </ErrorBoundary>
+    */}
   </StrictMode>,
 )
