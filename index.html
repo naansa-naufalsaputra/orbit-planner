@@ -9,24 +9,7 @@
 </head>
 
 <body>
-  <!-- DEBUG ERROR LOGGER -->
-  <div id="debug-error-log"
-    style="display:none;position:fixed;top:0;left:0;width:100%;background:rgba(200,0,0,0.9);color:white;z-index:9999;padding:10px;font-size:12px;max-height:50vh;overflow:auto;">
-    <strong>Debug Log:</strong><br>
-  </div>
-  <script>
-    window.onerror = function (msg, url, line, col, error) {
-      var log = document.getElementById('debug-error-log');
-      log.style.display = 'block';
-      log.innerHTML += 'Error: ' + msg + '<br>Line: ' + line + '<br><br>';
-      return false;
-    };
-    window.addEventListener('unhandledrejection', function (event) {
-      var log = document.getElementById('debug-error-log');
-      log.style.display = 'block';
-      log.innerHTML += 'Promise Error: ' + event.reason + '<br><br>';
-    });
-  </script>
+
 
   <div id="root">
     <!-- Visual Loading State for Slow Connections -->
